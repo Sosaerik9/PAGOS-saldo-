@@ -82,7 +82,39 @@
             border-color: #cc6000;
             color: white;
         }
-        /* Sección de carga de comprobante */
+        /* Estilos para los inputs del cliente */
+        .client-inputs {
+            background: #ffffff;
+            padding: 12px 15px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #e0e0e0;
+        }
+        .input-group {
+            margin-bottom: 10px;
+        }
+        .input-group:last-child {
+            margin-bottom: 0;
+        }
+        .input-group label {
+            display: block;
+            font-size: 12px;
+            font-weight: bold;
+            color: #444;
+            margin-bottom: 4px;
+        }
+        .input-group input {
+            width: 100%;
+            padding: 8px 10px;
+            border: 1px solid #ced4da;
+            border-radius: 6px;
+            box-sizing: border-box;
+            font-size: 13px;
+        }
+        .input-group input:focus {
+            outline: none;
+            border-color: #ff7700;
+        }
         .upload-section {
             background: #ffffff;
             padding: 12px 15px;
@@ -197,6 +229,18 @@
             </div>
         </div>
 
+        <!-- Datos del Cliente -->
+        <div class="client-inputs">
+            <div class="input-group">
+                <label for="client-name">👤 Tu Nombre:</label>
+                <input type="text" id="client-name" placeholder="Ej. Juan Pérez">
+            </div>
+            <div class="input-group" style="margin-top: 8px;">
+                <label for="client-phone">📱 Tu Teléfono:</label>
+                <input type="tel" id="client-phone" placeholder="Ej. 04121234567">
+            </div>
+        </div>
+
         <!-- Sección de Cargar Capture -->
         <div class="upload-section">
             <span class="upload-label">📎 Adjunta tu capture de pago (Opcional)</span>
@@ -247,16 +291,43 @@
             }
         }
 
-        functionenviarWhatsApp() {
+        async function enviarWhatsApp() {
+            const nombre = document.getElementById("client-name").value.trim();
+            const telefono = document.getElementById("client-phone").value.trim();
             const fileInput = document.getElementById("capture-file");
-            let mensaje = "Hola, adjunto mi comprobante de pago de Pago Móvil.";
-            
-            if (fileInput.files && fileInput.files[0]) {
-                mensaje += " (Ya seleccioné mi capture en la web, lo enviaré enseguida).";
+            const numeroWhatsApp = "584247046511";
+
+            // Construir el mensaje con los datos ingresados
+            let mensaje = "Hola, he realizado un pago móvil.\n";
+            if (nombre) mensaje += `👤 *Nombre:* ${nombre}\n`;
+            if (telefono) mensaje += `📱 *Teléfono:* ${telefono}\n`;
+            mensaje += "Adjunto mi comprobante.";
+
+            // Si es móvil y soporta compartir archivos, envía imagen y texto juntos
+            if (fileInput.files && fileInput.files[0] && navigator.canShare) {
+                const file = fileInput.files[0];
+                const shareData = {
+                    files: [file],
+                    title: 'Comprobante de Pago',
+                    text: mensaje
+                };
+
+                if (navigator.canShare(shareData)) {
+                    try {
+                        await navigator.share(shareData);
+                        return;
+                    } catch (error) {
+                        console.log("El usuario canceló o el navegador no permitió compartir el archivo directamente.");
+                    }
+                }
             }
 
-            const numeroWhatsApp = "584247046511";
-            const url = `https://wa.me/${numeroWhatsApp}?text=${encodeURIComponent(mensaje)}`;
+            // Si no soporta compartir de forma directa, redirige al WhatsApp con el número +58 424-7046511
+            if (fileInput.files && fileInput.files[0]) {
+                mensaje += " (Capture cargado en la web).";
+            }
+            
+            const url = `https://api.whatsapp.com/send?phone=${numeroWhatsApp}&text=${encodeURIComponent(mensaje)}`;
             window.open(url, '_blank');
         }
 
