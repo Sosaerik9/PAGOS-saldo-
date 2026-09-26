@@ -6,7 +6,7 @@
     <title>Pago Móvil</title>
     <style>
         body {
-            background-color: #ffffff; /* Fondo principal blanco */
+            background-color: #ffffff;
             color: #333333;
             font-family: Arial, sans-serif;
             display: flex;
@@ -16,8 +16,8 @@
             margin: 0;
         }
         .container {
-            background-color: #f4f5f7; /* Fondo secundario gris claro */
-            border: 2px solid #00ff66;
+            background-color: #f4f5f7;
+            border: 2px solid #ff7700;
             border-radius: 16px;
             width: 100%;
             max-width: 400px;
@@ -27,39 +27,39 @@
         }
         .logo-container {
             text-align: center;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
         }
         .logo-box {
-            border: 2px solid #00ff66;
+            border: 2px solid #ff7700;
             border-radius: 12px;
             display: inline-block;
-            padding: 10px 30px;
+            padding: 8px 25px;
             background: #ffffff;
-            color: #00ff66;
+            color: #ff7700;
             font-weight: bold;
-            font-size: 18px;
+            font-size: 16px;
         }
         .section-title {
-            color: #008f39;
-            font-size: 14px;
+            color: #ff7700;
+            font-size: 13px;
             font-weight: bold;
-            margin-bottom: 12px;
+            margin-bottom: 10px;
             display: flex;
             align-items: center;
             gap: 8px;
         }
         .info-box {
             background: #ffffff; 
-            padding: 15px; 
+            padding: 12px 15px; 
             border-radius: 10px; 
-            margin-bottom: 20px;
+            margin-bottom: 15px;
             border: 1px solid #e0e0e0;
         }
         .bank-data-row {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 12px;
+            margin-bottom: 10px;
             font-size: 14px;
             color: #333;
         }
@@ -70,7 +70,7 @@
             background-color: #e9ecef;
             border: 1px solid #ced4da;
             border-radius: 6px;
-            padding: 6px 12px;
+            padding: 5px 10px;
             cursor: pointer;
             font-size: 12px;
             font-weight: bold;
@@ -78,26 +78,79 @@
             transition: background 0.2s;
         }
         .copy-btn:hover {
-            background-color: #00ff66;
-            border-color: #00aa44;
+            background-color: #ff7700;
+            border-color: #cc6000;
+            color: white;
+        }
+        /* Sección de carga de comprobante */
+        .upload-section {
+            background: #ffffff;
+            padding: 12px 15px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            border: 1px dashed #ff7700;
+            text-align: center;
+        }
+        .upload-label {
+            font-size: 13px;
+            font-weight: bold;
+            color: #444;
+            display: block;
+            margin-bottom: 8px;
+        }
+        .file-input {
+            display: none;
+        }
+        .file-custom-btn {
+            display: inline-block;
+            background-color: #fff3e0;
+            color: #ff7700;
+            border: 1px solid #ff7700;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .file-custom-btn:hover {
+            background-color: #ff7700;
+            color: white;
+        }
+        #preview-container {
+            margin-top: 10px;
+            display: none;
+        }
+        #preview-img {
+            max-width: 100%;
+            max-height: 120px;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+        }
+        .file-name {
+            font-size: 11px;
+            color: #666;
+            margin-top: 4px;
+            word-break: break-all;
         }
         .btn-whatsapp {
             display: block;
             width: 100%;
-            background-color: #00aa44;
+            background-color: #ff7700;
             color: white;
             text-align: center;
-            padding: 14px;
+            padding: 12px;
             border-radius: 10px;
             text-decoration: none;
             font-weight: bold;
             box-sizing: border-box;
+            cursor: pointer;
+            border: none;
+            font-size: 14px;
         }
         .btn-whatsapp:hover {
-            background-color: #008833;
+            background-color: #cc6000;
         }
-
-        /* Estilo para el aviso flotante pequeño */
         #toast {
             visibility: hidden;
             min-width: 150px;
@@ -107,7 +160,7 @@
             border-radius: 8px;
             padding: 8px 12px;
             position: fixed;
-            zIndex: 1;
+            z-index: 1;
             left: 50%;
             bottom: 30px;
             transform: translateX(-50%);
@@ -144,11 +197,22 @@
             </div>
         </div>
 
+        <!-- Sección de Cargar Capture -->
+        <div class="upload-section">
+            <span class="upload-label">📎 Adjunta tu capture de pago (Opcional)</span>
+            <label for="capture-file" class="file-custom-btn">Seleccionar Imagen</label>
+            <input type="file" id="capture-file" class="file-input" accept="image/*" onchange="verificarImagen(this)">
+            <div id="preview-container">
+                <img id="preview-img" src="" alt="Vista previa">
+                <div id="file-name" class="file-name"></div>
+            </div>
+        </div>
+
         <!-- Botón de envío al WhatsApp administrador -->
-        <a href="https://wa.me/584247046511?text=Hola,%20adjunto%20mi%20comprobante%20de%20pago" target="_blank" class="btn-whatsapp">
+        <button onclick="enviarWhatsApp()" class="btn-whatsapp">
             ENVIAR CAPTURA A ADMINISTRADOR<br>
-            <span style="font-size: 13px; font-weight: normal;">💬 0424 704 65 11</span>
-        </a>
+            <span style="font-size: 12px; font-weight: normal;">💬 0424 704 65 11</span>
+        </button>
     </div>
 
     <!-- Notificación pequeña flotante -->
@@ -158,18 +222,51 @@
         function copiarTexto(idElemento) {
             const texto = document.getElementById(idElemento).innerText;
             navigator.clipboard.writeText(texto).then(() => {
-                mostrarToast();
+                mostrarToast("¡Copiado al portapapeles!");
             }).catch(err => {
                 console.error("Error al copiar: ", err);
             });
         }
 
-        function mostrarToast() {
+        function verificarImagen(input) {
+            const previewContainer = document.getElementById("preview-container");
+            const previewImg = document.getElementById("preview-img");
+            const fileNameDiv = document.getElementById("file-name");
+
+            if (input.files && input.files[0]) {
+                const file = input.files[0];
+                fileNameDiv.innerText = file.name;
+
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    previewImg.src = e.target.result;
+                    previewContainer.style.display = "block";
+                }
+                reader.readAsDataURL(file);
+                mostrarToast("¡Imagen cargada con éxito!");
+            }
+        }
+
+        functionenviarWhatsApp() {
+            const fileInput = document.getElementById("capture-file");
+            let mensaje = "Hola, adjunto mi comprobante de pago de Pago Móvil.";
+            
+            if (fileInput.files && fileInput.files[0]) {
+                mensaje += " (Ya seleccioné mi capture en la web, lo enviaré enseguida).";
+            }
+
+            const numeroWhatsApp = "584247046511";
+            const url = `https://wa.me/${numeroWhatsApp}?text=${encodeURIComponent(mensaje)}`;
+            window.open(url, '_blank');
+        }
+
+        function mostrarToast(texto) {
             const toast = document.getElementById("toast");
+            toast.innerText = texto;
             toast.className = "show";
             setTimeout(() => {
                 toast.className = toast.className.replace("show", "");
-            }, 2000); // El aviso dura 2 segundos en pantalla
+            }, 2500);
         }
     </script>
 
