@@ -40,7 +40,7 @@
             font-weight: bold;
             font-size: 16px;
         }
-        /* Estilos del Módulo QR Fijo de Redirección */
+        /* Módulo QR con opción de ocultarse */
         .qr-section {
             background: #ffffff;
             border: 1px solid #e0e0e0;
@@ -48,10 +48,11 @@
             padding: 15px;
             text-align: center;
             margin-bottom: 15px;
+            position: relative;
         }
         .qr-image {
-            width: 180px;
-            height: 180px;
+            width: 160px;
+            height: 160px;
             border-radius: 8px;
             border: 2px solid #ff7700;
             padding: 4px;
@@ -59,10 +60,19 @@
             object-fit: contain;
         }
         .qr-subtext {
-            font-size: 12px;
+            font-size: 11px;
             color: #ff7700;
-            margin-top: 8px;
+            margin-top: 6px;
             font-weight: bold;
+        }
+        .hide-qr-btn {
+            background: none;
+            border: none;
+            color: #999;
+            font-size: 11px;
+            cursor: pointer;
+            margin-top: 6px;
+            text-decoration: underline;
         }
         .section-title {
             color: #ff7700;
@@ -183,7 +193,7 @@
             border-radius: 6px;
             border: 1px solid #ccc;
         }
-        #file-name {
+        .file-name {
             font-size: 11px;
             color: #666;
             margin-top: 4px;
@@ -239,15 +249,16 @@
             <div class="logo-box">SERVICIO DE PAGOS</div>
         </div>
 
-        <!-- MÓDULO CÓDIGO QR CONFIGURADO PARA REDIRIGIR A LAS FUNCIONES DE LA WEB -->
-        <div class="qr-section">
-            <!-- Nota: Cambia el enlace de abajo por la ruta o dirección web exacta donde subas este formulario -->
-            <img class="qr-image" src="https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=file%3A%2F%2F%2FC%3A%2FUsers%2Fpc%2FDownloads%2Fgemini-code-1793314534925.html" alt="Código QR Redirección">
-            <div class="qr-subtext">📷 Escanea con tu Cámara para Abrir el Formulario</div>
+        <!-- MÓDULO QR QUE SE PUEDE OCULTAR -->
+        <div class="qr-section" id="qr-box">
+            <img class="qr-image" src="https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=https%3A%2F%2Fsosaerik9.github.io%2FPAGOS-saldo-%2F" alt="Código QR">
+            <div class="qr-subtext">📷 Escanea para abrir en el celular</div>
+            <br>
+            <button class="hide-qr-btn" onclick="ocultarQR()">[ Ocultar código QR ]</button>
         </div>
 
         <!-- Sección de Datos Bancarios -->
-        <div class="section-title">💳 DATOS BANCARIOS PAGO MÓVIL (PROVINCIAL)[cite: 7, 9, 10]</div>
+        <div class="section-title">💳 DATOS BANCARIOS PAGO MÓVIL (PROVINCIAL)</div>
 
         <div class="info-box">
             <div class="bank-data-row">
@@ -294,6 +305,10 @@
     <div id="toast">¡Copiado al portapapeles!</div>
 
     <script>
+        function ocultarQR() {
+            document.getElementById('qr-box').style.display = 'none';
+        }
+
         function copiarTexto(idElemento) {
             const texto = document.getElementById(idElemento).innerText;
             navigator.clipboard.writeText(texto).then(() => {
